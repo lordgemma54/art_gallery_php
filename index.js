@@ -1,7 +1,6 @@
 window.onload = function () {
-  new Ajax.Request("index.php", {
+  new Ajax.Request("artwork_service.php", {
     method: "get",
-    // parameters: { type: "action" },
     onSuccess: showPublicGallery,
     onFailure: ajaxFailed,
     onException: ajaxFailed,
@@ -9,13 +8,13 @@ window.onload = function () {
 };
 
 function showPublicGallery(ajax) {
-  let xml = ajax.responseXML();
+  let xml = ajax.responseXML;
   let tile_ids = xml.getElementsByTagName("image_id");
 
   for (let i = 0; i < tile_ids.length; i++) {
-    let id = tile_ids[i].nodeValue;
-    let img = document.createElement("img");
-    $("gallery").appendChild(img);
+    let id = tile_ids[i].textContent;
+    let img = document.createElement("div");
+    $("public-gallery").appendChild(img);
   }
 
   // on successful load of the page, an ajax object is returned.  parse json or xml object with array of randomized artwork.id so that on each reload a random set of images is displayed.
