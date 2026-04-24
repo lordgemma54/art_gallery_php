@@ -15,20 +15,33 @@ function showPublicGallery(ajax) {
   for (let i = 0; i < images.length; i++) {
     let id = images[i].getElementsByTagName("id")[0].textContent;
     let img_path = images[i].getElementsByTagName("path")[0].textContent;
-    console.log(id);
-    console.log(img_path);
+    // console.log(id);
+    // console.log(img_path);
 
     let img = document.createElement("img");
     img.src = img_path;
     img.alt = "artwork" + id;
-    img.id = "art-" + id;
+    img.id = "img" + id;
     img.className = "gallery-tile";
+    img.onmouseover = highlightTile;
+    img.onmouseout = removeHighlight;
+    img.onclick = showArtwork;
     gallery.appendChild(img);
   }
+}
 
-  // on successful load of the page, an ajax object is returned.  parse json or xml object with array of randomized artwork.id so that on each reload a random set of images is displayed.
-  // for each artwork.id returned, add a click handler, create an html image element, add styling via unobtrusive js, display tiles in a grid.
-  // the xml object is build on the server side
+function highlightTile() {
+  this.style.border = "1px solid #ffcc00";
+  this.style.cursor = "pointer";
+}
+
+function removeHighlight() {
+  this.style.border = "none";
+}
+
+function showArtwork() {
+  let id = this.id;
+  console.log(id);
 }
 
 // template to be used each time

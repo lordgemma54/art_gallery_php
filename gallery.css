@@ -1,5 +1,6 @@
 body {
   background-color: rgb(26, 26, 26);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 #public-gallery {
@@ -7,9 +8,9 @@ body {
   /* Automatically creates as many columns as fit */
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px; /* Space between images */
-  padding: 100px;
-  margin-left: 50px;
-  margin-right: 50px;
+  padding: 20px;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 #public-gallery img {
@@ -23,4 +24,9 @@ body {
 
 #public-gallery img:hover {
   transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.page-heading {
+  color: rgb(88, 88, 181);
+  text-align: center;
 }

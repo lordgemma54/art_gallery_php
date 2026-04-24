@@ -14,10 +14,9 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // a PDO statement object behaves like a pointer to a db 'cursor' that moves forward through rows
 // it doesnt store the full dataset in memory until you convert it to a php array. They are read-only
-
 $img_ids_all = $db->query("SELECT id, img_path FROM artwork");
 
-//already returns an array
+//already returns an array - dont add square brackets to $artworks, that creates a nested array
 $artworks = $img_ids_all ? $img_ids_all->fetchAll(PDO::FETCH_ASSOC) : [];
 shuffle($artworks);
 
