@@ -1,5 +1,6 @@
 body {
-  background-color: rgb(26, 26, 26);
+  /* background-color: rgb(26, 26, 26); */
+  background-color: white;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
@@ -26,7 +27,16 @@ body {
   transform: scale(1.05); /* Slight zoom on hover */
 }
 
+.gallery-tile:hover {
+  outline: 1px solid #ffcc00;
+  cursor: pointer;
+}
+
 .page-heading {
   color: rgb(88, 88, 181);
   text-align: center;
+}
+
+.artwork img {
+  width: 500px;
 }

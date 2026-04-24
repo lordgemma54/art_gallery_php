@@ -17,31 +17,18 @@ function showPublicGallery(ajax) {
     let img_path = images[i].getElementsByTagName("path")[0].textContent;
     // console.log(id);
     // console.log(img_path);
-
     let img = document.createElement("img");
+
     img.src = img_path;
     img.alt = "artwork" + id;
-    img.id = "img" + id;
+    img.id = id;
     img.className = "gallery-tile";
-    img.onmouseover = highlightTile;
-    img.onmouseout = removeHighlight;
-    img.onclick = showArtwork;
-    gallery.appendChild(img);
+
+    let a = document.createElement("a");
+    a.href = "artwork.php?id=" + id;
+    a.appendChild(img);
+    gallery.appendChild(a);
   }
-}
-
-function highlightTile() {
-  this.style.border = "1px solid #ffcc00";
-  this.style.cursor = "pointer";
-}
-
-function removeHighlight() {
-  this.style.border = "none";
-}
-
-function showArtwork() {
-  let id = this.id;
-  console.log(id);
 }
 
 // template to be used each time
