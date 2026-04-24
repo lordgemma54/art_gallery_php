@@ -1,0 +1,26 @@
+body {
+  background-color: rgb(26, 26, 26);
+}
+
+#public-gallery {
+  display: grid;
+  /* Automatically creates as many columns as fit */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px; /* Space between images */
+  padding: 100px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+#public-gallery img {
+  width: 100%; /* Fill the grid cell width */
+  height: 250px; /* Set a consistent height */
+  object-fit: cover; /* Crop image to fill area without stretching */
+  border-radius: 8px;
+  transition: transform 0.2s; /* Smooth hover effect */
+  cursor: pointer;
+}
+
+#public-gallery img:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+}
