@@ -1,6 +1,7 @@
 window.onload = function () {
   new Ajax.Request("artwork_service.php", {
     method: "get",
+    parameters: { action: "get_gallery" },
     onSuccess: showPublicGallery,
     onFailure: ajaxFailed,
     onException: ajaxFailed,
