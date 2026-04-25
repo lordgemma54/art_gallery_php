@@ -1,6 +1,6 @@
 <?php
+$action = isset($_GET['action']) ? ($_GET['action']) : $_POST['action'];
 
-$action = $_GET['action'];
 //handles only data retrival and xml / json processing.  
 // plays no role in displaying elements in the browser - ie. NO HTML
 $host = 'localhost';
@@ -16,17 +16,18 @@ switch ($action) {
     case 'get_gallery':
         generate_gallery_handler($db);
         break;
+
+    case 'get_likes':
+        generate_likes_handler($db);
+        break;
 }
 
 function generate_gallery_handler($db)
 {
-    // a PDO statement object behaves like a pointer to a db 'cursor' that moves forward through rows
-    // it doesnt store the full dataset in memory until you convert it to a php array. They are read-only
-    $img_ids_all = $db->query("SELECT id, img_path FROM artwork");
-    //already returns an array - dont add square brackets to $artworks, that creates a nested array
-    $artworks = $img_ids_all ? $img_ids_all->fetchAll(PDO::FETCH_ASSOC) : [];
+    // a PDO statement object behaves like a pointer to a db 'cursor' that moves forward through rows it doesnt store the full dataset in memory until you convert it to a php array. They are read-only
+    $stmt = $db->query("SELECT id, img_path FROM artwork");
+    $artworks = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
     shuffle($artworks);
-
     header("Content-type: text/xml");
     echo generate_xml_all($artworks);
 
@@ -59,23 +60,58 @@ function generate_xml_all($artworks)
     return $xmldom->saveXML();
 }
 
+function generate_likes_handler($db)
+{
+    $artwork_id = isset($_GET['id']) ? ($_GET['id']) : null;
+    $stmt = $db->prepare("SELECT COUNT(*) as 'total'
+                                FROM likes WHERE artwork_id = ?");
 
-// function getLikes_JSON($db)
+    $stmt->execute([$artwork_id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    header("Content-type: application/json");
+    echo (json_encode($result));
+}
+
+// function add_like()
 // {
-//     $artwork_id = $_POST["artwork_id"];
+//     //  $artwork_id = $_POST["artwork_id"];
+//     // $post_likes = $db->prepare("INSERT INTO likes WHERE artwork_id = ? ");
+//     // $post_likes->execute(array($artwork_id));
+// }
 
-//     $post_likes = $db->prepare("INSERT INTO likes WHERE artwork_id = ? ");
-//     $post_likes->execute(array($artwork_id));
 
-//     $get_likes = $db->prepare("SELECT COUNT(*) as 'total'
-//                         FROM likes WHERE artwork_id = ?");
+// function get_likes_JSON($result)
+// {
 
-//     $get_likes = $db->exectue(array($artwork_id));
-//     $artwork_likes = $get_likes(PDO::FETCH_ASSOC);
-
-//     return json_encode($artwork_likes);
+//     return json_encode($result);
 // }
 // header("Content-type: application/json");
 // print getLikes_JSON();
 
 // password_hash($password, PASSWORD_DEFAULT);
+
+
+
+
+
+
+
+// $get_row_query = $db->prepare("SELECT 
+//                                 aw.*,
+//                                 ar.username,
+//                                 ar.id,
+//                                 ar.avatar_img_path,
+//                                 c.comment,
+//                                 c.created_at,
+//                                 (SELECT COUNT(*) FROM likes WHERE aw.id = artwork_id) AS 'likes'
+//                                 FROM artwork aw
+//                                 JOIN artist ar ON ar.id = aw.artist_id 
+//                                 LEFT JOIN likes l ON l.artwork_id = aw.id
+//                                 LEFT JOIN comment c ON c.artwork_id = aw.id
+//                                 WHERE aw.id = ?");
+
+// $get_row_query->execute(array($id));
+
+// $artwork = $get_row_query->fetch(PDO::FETCH_ASSOC);
+// print_r($artwork);
