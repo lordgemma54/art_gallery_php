@@ -20,6 +20,10 @@ switch ($action) {
     case 'get_likes':
         generate_likes_handler($db);
         break;
+
+    case 'add_like':
+        add_like($db);
+        break;
 }
 
 function generate_gallery_handler($db)
@@ -73,12 +77,12 @@ function generate_likes_handler($db)
     echo (json_encode($result));
 }
 
-// function add_like()
-// {
-//     //  $artwork_id = $_POST["artwork_id"];
-//     // $post_likes = $db->prepare("INSERT INTO likes WHERE artwork_id = ? ");
-//     // $post_likes->execute(array($artwork_id));
-// }
+function add_like($db)
+{
+    $artwork_id = isset($_POST["artwork_id"]) ? $_POST["artwork_id"] : null;
+    $post_likes = $db->prepare("INSERT INTO likes WHERE artwork_id = ? ");
+    $post_likes->execute([$artwork_id]);
+}
 
 
 // function get_likes_JSON($result)

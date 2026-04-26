@@ -3,6 +3,7 @@
 <?php
 $artwork_id = isset($_GET["id"]) ? $_GET["id"] : null;
 
+
 $host = 'localhost';
 $port = '3306';
 $database = 'art_gallery';
@@ -20,8 +21,12 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 <div class="artwork-container">
+
     <input type="hidden" id="artwork_id" value="<?= $artwork_id ?>">
 
+    <!-- ------------------------------------------------------------- -->
+    <input type="hidden" id="login_status" value="<?= isset($_SESSION['logged-in']) && $_SESSION['logged-in'] === true ? '1' : '0' ?>">
+    <!-- ------------------------------------------------------------- -->
 
     <div class="artwork">
         <img src="<?= $artwork["img_path"] ?>" alt="artwork <?= $artwork_id ?>">
