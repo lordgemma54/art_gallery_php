@@ -2,25 +2,32 @@
 session_start();
 $un = $_POST["username"];
 $pw = $_POST["password"];
+$email = $_POST["email"];
 
-// $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+$hashed_password = password_hash($pw, PASSWORD_DEFAULT);
 
 $host = 'localhost';
 $port = '3306';
 $database = 'art_gallery';
-$user = 'root';
-$password = 'Mr.PouncyChonkers@400';
+$dbUser = 'root';
+$dbPassword = 'Mr.PouncyChonkers@400';
 
-$db = new PDO("mysql:host=$host;port=$port;dbname=$database", "$user", "$password");
+$db = new PDO("mysql:host=$host;port=$port;dbname=$database", "$dbUser", "$dbPassword");
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
 // check for duplicate usernames
 $check_user = $db->prepare("SELECT username FROM artist WHERE username = ?");
 $check_user->execute([$un]);
-$user = $check_user->fetch(PDO::FETCH_ASSOC);
-if ($user) {
-    $stmt = $db->prepare("INSERT INTO artist (username, password) VALUES (? , ?)");
-    $stmt->execute([$un, $pw]);
-    header("Location: login.php");
+$existingUser = $check_user->fetch(PDO::FETCH_ASSOC);
+if ($existingUser) {
+    echo "A user with this name already exists";
+} else {
+    $stmt = $db->prepare("INSERT INTO artist (username, password, email) VALUES (? , ?, ?)");
+    $stmt->execute([$un, $hashed_password, $email]);
+    $_SESSION["logged-in"] = true;
+    $_SESSION["user-id"] = $db->lastInsertId();
+    $_SESSION["username"] = $un;
+    header("Location: create-profile.php");
+    exit();
 }

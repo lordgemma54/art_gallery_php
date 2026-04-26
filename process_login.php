@@ -4,15 +4,15 @@ session_start();
 $un = $_POST["username"];
 $pw = $_POST["password"];
 $redirect_id = $_POST["redirect_to"];
-$login_successful = false;
+// $login_successful = false;
 
 $host = 'localhost';
 $port = '3306';
 $database = 'art_gallery';
-$user = 'root';
-$password = 'Mr.PouncyChonkers@400';
+$dbUser = 'root';
+$dbPassword = 'Mr.PouncyChonkers@400';
 
-$db = new PDO("mysql:host=$host;port=$port;dbname=$database", "$user", "$password");
+$db = new PDO("mysql:host=$host;port=$port;dbname=$database", "$dbUser", "$dbPassword");
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $stmt = $db->prepare("SELECT id, username FROM artist WHERE artist.username = ?");
@@ -25,19 +25,18 @@ if ($user) {
     $stmt->execute([$user['username']]);
     $user_pw = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($pw === $user_pw["password"]) {
-        $login_successful = true;
+    if (password_verify($pw, $user_pw["password"])) {
+        $_SESSION["user_id"] = $user['id'];
+        $_SESSION["logged-in"] = true;
+        if (!empty($redirect_id)) {
+            header("Location: artwork.php?id=" . $redirect_id);
+        } else {
+            header("Location: index.php");
+        }
+        exit();
     }
 }
 
 // ----------------------------------------------------
 if ($login_successful) {
-    $_SESSION["username"] = $user['username'];
-    $_SESSION["logged-in"] = true;
-    if (!empty($redirect_id)) {
-        header("Location: artwork.php?id=" . $redirect_id);
-    } else {
-        header("Location: index.php");
-    }
-    exit();
 }

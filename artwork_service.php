@@ -6,10 +6,10 @@ $action = isset($_GET['action']) ? ($_GET['action']) : $_POST['action'];
 $host = 'localhost';
 $port = '3306';
 $database = 'art_gallery';
-$user = 'root';
-$password = 'Mr.PouncyChonkers@400';
+$dbUser = 'root';
+$dbPassword = 'Mr.PouncyChonkers@400';
 
-$db = new PDO("mysql:host=$host;port=$port;dbname=$database", "$user", "$password");
+$db = new PDO("mysql:host=$host;port=$port;dbname=$database", "$dbUser", "$dbPassword");
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 switch ($action) {

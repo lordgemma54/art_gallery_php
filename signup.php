@@ -4,7 +4,7 @@ include("top.html");
 
 <div class="container">
     <div class="card">
-        <form class="signup-form" action="signup-submission.php" method="post">
+        <form class="signup-form" action="process-signup.php" method="post">
             <label><strong>Username</strong> <input type="text" name="username" size="16" required></label> <br>
             <label><strong>Password</strong> <input type="password" name="password" size="16" required></label> <br>
             <label><strong>Email</strong> <input type="email" name="email" size="16" required></label> <br>
