@@ -1,8 +1,10 @@
-<?php include("top.html"); ?>
-
 <?php
-$artwork_id = isset($_GET["id"]) ? $_GET["id"] : null;
+session_start();
+include("top.html");
 
+$artwork_id = isset($_GET["id"]) ? $_GET["id"] : null;
+//    $_SESSION isset($_SESSION["logged-in"] && $_SESSION["logged-in"] === true)
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'guest';
 
 $host = 'localhost';
 $port = '3306';

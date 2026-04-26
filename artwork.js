@@ -9,6 +9,10 @@ window.onload = function () {
   // });
 
   let artwork_id = $("artwork_id").value;
+  let like_btn = $("like-btn");
+  if (like_btn) {
+    add_like();
+  }
   // console.log(artwork_id);
   load_likes(artwork_id);
   // load_comments(artwork_id);
@@ -27,23 +31,22 @@ function load_likes(artwork_id) {
 function show_likes(ajax) {
   console.log("raw text response: ", ajax.responseText);
   console.log(artwork_id);
+  // let loginInput = $("login_status").value;
+
   let data = JSON.parse(ajax.responseText);
   $("like-count").innerHTML = data.total;
 }
 
 function add_like() {
   let artwork_id = $("artwork_id").value;
-
-  // -----------------------------------------------------------
-  let loginInput = $("login_status").value;
-  if (loginInput !== "1") {
-    window.location.href = "login.php?redirect_to=" + artwork_id;
-    return;
-  }
-  // -----------------------------------------------------------
-
   let like_btn = $("like-btn");
+  let loginInput = $("login_status").value;
+
   like_btn.onclick = function () {
+    if (loginInput !== "1") {
+      window.location.href = "login.php?redirect_to=" + artwork_id;
+      return;
+    }
     new Ajax.Request("artwork_service.php", {
       method: "POST",
       parameters: { action: "add_like", id: artwork_id },
