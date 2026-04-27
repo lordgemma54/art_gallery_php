@@ -49,7 +49,11 @@ function add_like() {
     }
     new Ajax.Request("artwork_service.php", {
       method: "POST",
-      parameters: { action: "add_like", id: artwork_id },
+      parameters: {
+        action: "add_like",
+        artwork_id: artwork_id,
+        artist_id: artist_id,
+      },
       onSuccess: function () {
         load_likes(artwork_id);
       },
@@ -63,7 +67,7 @@ function add_like() {
 function load_comments(artwork_id) {
   new Ajax.Request("artwork_service.php", {
     method: "GET",
-    parameters: { action: "get_comments", id: artwork_id },
+    parameters: { action: "get_comments", artwork_id: artwork_id },
     onSuccess: show_comments,
     onFailure: ajaxFailed,
     onException: ajaxFailed,
@@ -80,9 +84,34 @@ function show_comments(ajax) {
     let div = document.createElement("div");
     div.className = "comment";
     div.innerHTML =
-      "<strong>" + comments.username + "</strong>" + comments.comment;
+      "<strong>" + comments[i].username + "</strong>" + comments[i].comment;
     comments_box.appendChild(div);
   }
+}
+
+function add_comment() {
+  let comment_btn = $("comment-btn");
+  comment_btn.onclick = function () {
+    let loginInput = $("login_status").value;
+    let artwork_id = $("artwork_id").value;
+    if (loginInput !== "1") {
+      window.location.href = "login.php?redirect_to=" + artwork_id;
+      return;
+    }
+    new Ajax.Request("artwork_service.php", {
+      method: "POST",
+      parameters: {
+        action: "add_comment",
+        artowrk_id: artwork_id,
+        artist_id: artist_id,
+      },
+      onSuccess: function () {
+        load_comments(artwork_id);
+      },
+      onFailure: ajaxFailed,
+      onException: ajaxFailed,
+    });
+  };
 }
 
 // ----------------------------------------------------------- RELATED IMGS
@@ -120,23 +149,23 @@ function show_related_imgs(ajax) {
 function show_image(id) {
   new Ajax.Request("artwork_service.php", {
     method: "GET",
-    parameters: { action: "get_artwork", artwork_id: id },
+    parameters: { action: "get_image", artwork_id: id },
     onSuccess: function (ajax) {
       let image = JSON.parse(ajax.responseText);
       $("artwork-img").src = image.img_path;
       $("title").innerHTML = image.title;
 
       $("artist-link").innerHTML = image.username;
-      $("artist-link").href = "artist.php?id=" + img.artist_id;
+      $("artist-link").href = "artist.php?id=" + image.artist_id;
 
-      $("artist-avatar").src = img.avatar_img_path;
+      $("artist-avatar").src = image.avatar_img_path;
 
       $("artwork_id").value = image.id;
       $("artist_id").value = image.artist_id;
 
       load_likes(image.id);
       load_comments(image.id);
-      load_related_imgs(image.id);
+      load_related_imgs(image.artist_id, image.id);
     },
     onFailure: ajaxFailed,
     onException: ajaxFailed,

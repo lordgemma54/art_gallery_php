@@ -31,6 +31,10 @@ switch ($action) {
         get_comments($db);
         break;
 
+    case 'add_comment':
+        add_comment($db);
+        break;
+
     case 'get_related_imgs':
         get_related_imgs($db);
         break;
@@ -95,9 +99,12 @@ function get_likes($db)
 
 function add_like($db)
 {
+    $artwork_id = $_POST["artwork_id"];
+    $artist_id = $_POST["artist_id"];
+
     $artwork_id = isset($_POST["artwork_id"]) ? $_POST["artwork_id"] : null;
-    $post_likes = $db->prepare("INSERT INTO likes WHERE artwork_id = ? ");
-    $post_likes->execute([$artwork_id]);
+    $stmt = $db->prepare("INSERT INTO likes (artwork_id, artist_id) VALUES (?, ?)");
+    $stmt->execute([$artwork_id, $artist_id]);
 }
 
 function get_comments($db)
@@ -116,6 +123,17 @@ function get_comments($db)
     echo json_encode($comments);
 }
 
+function add_comment($db)
+{
+    $artist_id = $_POST["artist_id"];
+    $artwork_id = $_POST["artwork_id"];
+    $comment = $_POST["comment"];
+
+    $stmt = $db->prepare("INSERT INTO comment (artist_id, artwork_id, comment) (VALUES (?, ?, ?)");
+    $stmt->execute([$artist_id, $artwork_id, $comment]);
+}
+
+
 function get_related_imgs($db)
 {
     $artist_id = $_GET["artist_id"];
@@ -127,7 +145,7 @@ function get_related_imgs($db)
                         AND id <> ?
                         ORDER BY RAND()
                         LIMIT 3");
-    $stmt->execute([$artist_id], [$current_id]);
+    $stmt->execute([$artist_id, $current_id]);
     $related_imgs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header("Content-type: application/json");

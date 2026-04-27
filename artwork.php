@@ -37,7 +37,7 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 <div id="artwork-container">
-    <img id="artwork-img" src="<?= $artwork["img_path"] ?>" alt="artwork <?= $artwork_id ?>">
+    <img id="artwork-img" src="<?= $artwork["img_path"] ?>" alt="artwork: <?= $artwork_id ?>">
     <p id="title"><?= htmlspecialchars($artwork["title"]) ?></p>
 </div>
 <!-- ------------------------------------------------------------- -->
@@ -50,13 +50,16 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
 
 <div class="comments-container">
     <h2>comments</h2>
+    <form action="">
+        <input type="text" name="comment" id=""> Add a comment
+    </form>
     <div id="comments-list"></div>
 </div>
 
 <!-- ------------------------------------------------------------- -->
 
 <div class="artist-container">
-    <a id="artist-link" href="artist.php?username=<?= $artwork["artist_id"] ?>">
+    <a id="artist-link" href="profile.php?id=<?= $artwork["artist_id"] ?>">
         <?= htmlspecialchars($artwork['username']) ?>
         <img id="artist-avatar" src="<?= $artwork['avatar_img_path'] ?>" alt="artist profile">
     </a>
