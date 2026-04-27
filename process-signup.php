@@ -25,8 +25,8 @@ if ($existingUser) {
 } else {
     $stmt = $db->prepare("INSERT INTO artist (username, password, email) VALUES (? , ?, ?)");
     $stmt->execute([$un, $hashed_password, $email]);
-    $_SESSION["logged-in"] = true;
-    $_SESSION["user-id"] = $db->lastInsertId();
+    $_SESSION["logged_in"] = true;
+    $_SESSION["user_id"] = $db->lastInsertId();
     $_SESSION["username"] = $un;
     header("Location: create-profile.php");
     exit();

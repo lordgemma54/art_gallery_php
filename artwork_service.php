@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $action = isset($_GET['action']) ? ($_GET['action']) : $_POST['action'];
 
 //handles only data retrival and xml / json processing.  
@@ -18,11 +20,23 @@ switch ($action) {
         break;
 
     case 'get_likes':
-        generate_likes_handler($db);
+        get_likes($db);
         break;
 
     case 'add_like':
         add_like($db);
+        break;
+
+    case 'get_user_gallery':
+        get_user_gallery($db);
+        break;
+
+    case 'get_related_imgs':
+        get_related_imgs($db);
+        break;
+
+    case 'get_image':
+        get_image($db);
         break;
 }
 
@@ -64,12 +78,11 @@ function generate_xml_all($artworks)
     return $xmldom->saveXML();
 }
 
-function generate_likes_handler($db)
+function get_likes($db)
 {
     $artwork_id = isset($_GET['id']) ? ($_GET['id']) : null;
     $stmt = $db->prepare("SELECT COUNT(*) as 'total'
-                                FROM likes WHERE artwork_id = ?");
-
+                        FROM likes WHERE artwork_id = ?");
     $stmt->execute([$artwork_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -83,6 +96,36 @@ function add_like($db)
     $post_likes = $db->prepare("INSERT INTO likes WHERE artwork_id = ? ");
     $post_likes->execute([$artwork_id]);
 }
+
+function get_user_gallery($db)
+{
+    $user_id = $_GET["user_id"];
+    $stmt = $db->query("SELECT id, img_path FROM artwork WHERE artist_id = ?");
+    $stmt->execute([$user_id]);
+    $user_gallery = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    header("Content-type: application/json");
+    echo json_encode($user_gallery);
+}
+
+function get_related_imgs($db)
+{
+    $user_id = $_SESSION["user_id"];
+
+    $stmt = $db->prepare("SELECT id, img_path 
+                        FROM artwork
+                        WHERE artist_id = ? 
+                        ORDER BY RAND()
+                        LIMIT 3");
+    $stmt->execute(["$user_id"]);
+    $related_imgs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    header("Content-type: application/json");
+    echo json_encode($related_imgs);
+}
+
+function get_image($db) {}
+
 
 
 // function get_likes_JSON($result)

@@ -30,3 +30,21 @@ if (!empty($_FILES["avatar"]["name"])) {
         $stmt->execute([$upload_path, $bio, $user_id]);
     }
 }
+
+foreach ($_FILES["artworks"]["tmp_name"] as $key => $tmp_name) {
+    if (!empty($tmp_name)) {
+        $file_type = $_FILES["artworks"]["type"][$key];
+
+        if (in_array($file_type, $allowed_img_types)) {
+            $filename = uniqid() . "_" . $_FILES["artworks"]["name"][$key];
+            $upload_path = $base_path . $filename;
+            move_uploaded_file($tmp_name, $upload_path);
+
+            $stmt = $db->prepare("INSERT INTO artwork (artist_id, img_path) VALUES (?, ?");
+            $stmt->execute([$user_id, $upload_path]);
+        }
+    }
+}
+
+header("Location: profile.php?id=" . $user_id);
+exit();

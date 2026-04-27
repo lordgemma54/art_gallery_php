@@ -1,18 +1,17 @@
 <?php
 session_start();
-
-include("top.html");
-
 if (!isset($_SESSION["logged-in"])) {
     header("Location: login.php");
     exit();
+
+    include("top.html");
 }
 $user_id = $_SESSION["user_id"];
 ?>
 <form action="process-profile.php" method="post" enctype="multipart/form-data">
 
     <div class="artist-details">
-        <textarea name="bio" id="bio-area"></textarea>
+        <textarea name="bio" id="bio-area" placeholder="enter optional details about yourself"></textarea>
         <div class="total-likes">Total likes:
             <span class="like-counter"></span>
         </div>
@@ -27,5 +26,3 @@ $user_id = $_SESSION["user_id"];
         <button type="submit">Create Profile</button>
     </div>
 </form>
-
-<div class="user-gallery"></div>

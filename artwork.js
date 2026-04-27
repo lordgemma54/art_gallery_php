@@ -57,6 +57,37 @@ function add_like() {
   };
 }
 
+function get_related_imgs(artist_id) {
+  new Ajax.Request("artwork_service.php", {
+    method: "GET",
+    parameters: { action: "get_related_imgs", artist_id: artist_id },
+    onSuccess: show_related_imgs,
+    onFailure: ajaxFailed,
+    onException: ajaxFailed,
+  });
+}
+
+function show_related_imgs(ajax) {
+  let related_imgs = JSON.parse(ajaxResponseText);
+  let related_imgs_container = $("related-works");
+
+  related_imgs.forEach((img) => {
+    let image = document.createElement("img");
+    image.src = img.img_path;
+    image.onClick = show_image(related_imgs["img_path"], related_imgs["id"]);
+
+    related_imgs_container.appendChild(image);
+  });
+}
+
+function show_image(img_path, id) {
+  let artwork_container = $("artwork-container");
+  let image = $("artwork");
+  image.src = img_path;
+  image.alt = "image" + id;
+  artwork_container.appendChild(image);
+}
+
 // function update_likes(ajax) {
 //   new Ajax.Request("artwork_service.php" {
 //     method: "GET",

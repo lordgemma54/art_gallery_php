@@ -27,7 +27,7 @@ if ($user) {
 
     if (password_verify($pw, $user_pw["password"])) {
         $_SESSION["user_id"] = $user['id'];
-        $_SESSION["logged-in"] = true;
+        $_SESSION["logged_in"] = true;
         if (!empty($redirect_id)) {
             header("Location: artwork.php?id=" . $redirect_id);
         } else {

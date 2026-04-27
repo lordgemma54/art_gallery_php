@@ -4,6 +4,9 @@ include("top.html");
 
 $artwork_id = isset($_GET["id"]) ? $_GET["id"] : null;
 //    $_SESSION isset($_SESSION["logged-in"] && $_SESSION["logged-in"] === true)
+
+print_r($_SESSION);
+
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'guest';
 
 $host = 'localhost';
@@ -15,14 +18,24 @@ $dbPassword = 'Mr.PouncyChonkers@400';
 $db = new PDO("mysql:host=$host;port=$port;dbname=$database", "$dbUser", "$dbPassword");
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$stmt = $db->prepare("SELECT * FROM artwork WHERE artwork.id = ?");
+$stmt = $db->prepare("SELECT aw.*, 
+                    ar.username AS 'artist name',
+                    ar.id AS 'artist id', 
+                    ar.avatar_img_path
+                    FROM artwork aw
+                    JOIN artist ar ON aw.artist_id = ar.id
+                    WHERE aw.id = ?");
 $stmt->execute(array($artwork_id));
 $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+
 // print_r($artwork);
 ?>
 
 
-<div class="artwork-container">
+<div class="page-container">
 
     <input type="hidden" id="artwork_id" value="<?= $artwork_id ?>">
 
@@ -30,8 +43,8 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
     <input type="hidden" id="login_status" value="<?= isset($_SESSION['logged-in']) && $_SESSION['logged-in'] === true ? '1' : '0' ?>">
     <!-- ------------------------------------------------------------- -->
 
-    <div class="artwork">
-        <img src="<?= $artwork["img_path"] ?>" alt="artwork <?= $artwork_id ?>">
+    <div id="artwork-container">
+        <img id="artwork" src="<?= $artwork["img_path"] ?>" alt="artwork <?= $artwork_id ?>">
         <p class="title"><?= $artwork["title"] ?></p>
     </div>
 </div>
@@ -48,7 +61,8 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
     <!-- <p><?= $artwork["comment"] ?></p> -->
 </div>
 
-<!-- <div class="artist-container">
+
+<div class="artist-container">
     <h2>
         <a href="artist.php?username=<?= htmlspecialchars($artwork['username']) ?>"><?= $artwork['username'] ?>
             <img src="<?= $artwork['avatar_img_path'] ?>" alt="artist profile">
@@ -57,7 +71,9 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
     <img src="<?= $artwork["avatar_img_path"] ?>" alt="">
 
 
-    <div id="other-works">
+    <div id="related-works"> </div>
+</div>
+<!-- 
 
     </div> -->
 <!-- <div class="likes-container">
