@@ -21,12 +21,13 @@ $check_user = $db->prepare("SELECT username FROM artist WHERE username = ?");
 $check_user->execute([$un]);
 $existingUser = $check_user->fetch(PDO::FETCH_ASSOC);
 if ($existingUser) {
-    echo "A user with this name already exists";
+    header("Location: signup.php");
+    exit();
 } else {
     $stmt = $db->prepare("INSERT INTO artist (username, password, email) VALUES (? , ?, ?)");
     $stmt->execute([$un, $hashed_password, $email]);
     $_SESSION["logged_in"] = true;
-    $_SESSION["user_id"] = $db->lastInsertId();
+    $_SESSION["artist_id"] = $db->lastInsertId();
     $_SESSION["username"] = $un;
     header("Location: create-profile.php");
     exit();

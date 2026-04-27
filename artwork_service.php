@@ -27,8 +27,8 @@ switch ($action) {
         add_like($db);
         break;
 
-    case 'get_user_gallery':
-        get_user_gallery($db);
+    case 'get_comments':
+        get_comments($db);
         break;
 
     case 'get_related_imgs':
@@ -37,6 +37,9 @@ switch ($action) {
 
     case 'get_image':
         get_image($db);
+        break;
+    case 'get_artist_gallery':
+        get_artist_gallery($db);
         break;
 }
 
@@ -97,36 +100,64 @@ function add_like($db)
     $post_likes->execute([$artwork_id]);
 }
 
-function get_user_gallery($db)
+function get_comments($db)
 {
-    $user_id = $_GET["user_id"];
-    $stmt = $db->query("SELECT id, img_path FROM artwork WHERE artist_id = ?");
-    $stmt->execute([$user_id]);
-    $user_gallery = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $artwork_id = $_GET["artwork_id"];
+
+    $stmt = $db->prepare("SELECT c.comment, a.username 
+                        FROM comment c
+                        JOIN artist a ON c.artist_id = a.id
+                        WHERE artwork_id = ? 
+                        ORDER BY created_at DESC");
+    $stmt->execute([$artwork_id]);
+    $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header("Content-type: application/json");
-    echo json_encode($user_gallery);
+    echo json_encode($comments);
 }
 
 function get_related_imgs($db)
 {
-    $user_id = $_SESSION["user_id"];
+    $artist_id = $_GET["artist_id"];
+    $current_id = $_GET["current_id"];
 
     $stmt = $db->prepare("SELECT id, img_path 
                         FROM artwork
                         WHERE artist_id = ? 
+                        AND id <> ?
                         ORDER BY RAND()
                         LIMIT 3");
-    $stmt->execute(["$user_id"]);
+    $stmt->execute([$artist_id], [$current_id]);
     $related_imgs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header("Content-type: application/json");
     echo json_encode($related_imgs);
 }
 
-function get_image($db) {}
+function get_image($db)
+{
 
+    $artwork_id = $_GET["artwork_id"];
+    $stmt = $db->prepare("SELECT aw.*, ar.username, ar.avatar_img_path 
+                        FROM artwork aw
+                        JOIN artist ar ON aw.artist_id = ar.id
+                        WHERE aw.id = ?");
+    $stmt->execute([$artwork_id]);
+    $artwork = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("Content-type: application/json");
+    echo json_encode($artwork);
+}
 
+function get_artist_gallery($db)
+{
+    $artist_id = $_GET["artist_id"];
+    $stmt = $db->query("SELECT id, img_path FROM artwork WHERE artist_id = ?");
+    $stmt->execute([$artist_id]);
+    $artist_gallery = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    header("Content-type: application/json");
+    echo json_encode($artist_gallery);
+}
 
 // function get_likes_JSON($result)
 // {

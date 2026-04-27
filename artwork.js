@@ -9,15 +9,20 @@ window.onload = function () {
   // });
 
   let artwork_id = $("artwork_id").value;
-  let like_btn = $("like-btn");
-  if (like_btn) {
-    add_like();
-  }
-  // console.log(artwork_id);
+  let artist_id = $("artist_id").value;
+
+  // let like_btn = $("like-btn");
+  // if (like_btn) {
+  //   add_like();
+  // }
+  add_like();
   load_likes(artwork_id);
+  load_comments(artwork_id);
+  load_related_imgs(artist_id, artwork_id);
   // load_comments(artwork_id);
 };
 
+// ----------------------------------------------------------- LIKES
 function load_likes(artwork_id) {
   new Ajax.Request("artwork_service.php", {
     method: "GET",
@@ -29,20 +34,15 @@ function load_likes(artwork_id) {
 }
 
 function show_likes(ajax) {
-  console.log("raw text response: ", ajax.responseText);
-  console.log(artwork_id);
-  // let loginInput = $("login_status").value;
-
   let data = JSON.parse(ajax.responseText);
   $("like-count").innerHTML = data.total;
 }
 
 function add_like() {
-  let artwork_id = $("artwork_id").value;
   let like_btn = $("like-btn");
-  let loginInput = $("login_status").value;
-
   like_btn.onclick = function () {
+    let loginInput = $("login_status").value;
+    let artwork_id = $("artwork_id").value;
     if (loginInput !== "1") {
       window.location.href = "login.php?redirect_to=" + artwork_id;
       return;
@@ -50,17 +50,50 @@ function add_like() {
     new Ajax.Request("artwork_service.php", {
       method: "POST",
       parameters: { action: "add_like", id: artwork_id },
-      onSuccess: load_likes,
+      onSuccess: function () {
+        load_likes(artwork_id);
+      },
       onFailure: ajaxFailed,
       onException: ajaxFailed,
     });
   };
 }
 
-function get_related_imgs(artist_id) {
+// ----------------------------------------------------------- COMMENTS
+function load_comments(artwork_id) {
   new Ajax.Request("artwork_service.php", {
     method: "GET",
-    parameters: { action: "get_related_imgs", artist_id: artist_id },
+    parameters: { action: "get_comments", id: artwork_id },
+    onSuccess: show_comments,
+    onFailure: ajaxFailed,
+    onException: ajaxFailed,
+  });
+}
+
+function show_comments(ajax) {
+  let comments = JSON.parse(ajax.responseText);
+
+  let comments_box = $("comments-list");
+  comments_box.innerHTML = "";
+
+  for (let i = 0; i < comments.length; i++) {
+    let div = document.createElement("div");
+    div.className = "comment";
+    div.innerHTML =
+      "<strong>" + comments.username + "</strong>" + comments.comment;
+    comments_box.appendChild(div);
+  }
+}
+
+// ----------------------------------------------------------- RELATED IMGS
+function load_related_imgs(artist_id, current_id) {
+  new Ajax.Request("artwork_service.php", {
+    method: "GET",
+    parameters: {
+      action: "get_related_imgs",
+      artist_id: artist_id,
+      current_id: current_id,
+    },
     onSuccess: show_related_imgs,
     onFailure: ajaxFailed,
     onException: ajaxFailed,
@@ -68,32 +101,47 @@ function get_related_imgs(artist_id) {
 }
 
 function show_related_imgs(ajax) {
-  let related_imgs = JSON.parse(ajaxResponseText);
+  let related_imgs = JSON.parse(ajax.responseText);
   let related_imgs_container = $("related-works");
 
-  related_imgs.forEach((img) => {
+  related_imgs.forEach(function (img) {
     let image = document.createElement("img");
     image.src = img.img_path;
-    image.onClick = show_image(related_imgs["img_path"], related_imgs["id"]);
+    image.className = "gallery-tile";
+    image.onclick = function () {
+      show_image(img.id);
+    };
 
     related_imgs_container.appendChild(image);
   });
 }
 
-function show_image(img_path, id) {
-  let artwork_container = $("artwork-container");
-  let image = $("artwork");
-  image.src = img_path;
-  image.alt = "image" + id;
-  artwork_container.appendChild(image);
-}
+// ----------------------------------------------------------- SHOW ART
+function show_image(id) {
+  new Ajax.Request("artwork_service.php", {
+    method: "GET",
+    parameters: { action: "get_artwork", artwork_id: id },
+    onSuccess: function (ajax) {
+      let image = JSON.parse(ajax.responseText);
+      $("artwork-img").src = image.img_path;
+      $("title").innerHTML = image.title;
 
-// function update_likes(ajax) {
-//   new Ajax.Request("artwork_service.php" {
-//     method: "GET",
-//     parameters: {action}
-//   });
-// }
+      $("artist-link").innerHTML = image.username;
+      $("artist-link").href = "artist.php?id=" + img.artist_id;
+
+      $("artist-avatar").src = img.avatar_img_path;
+
+      $("artwork_id").value = image.id;
+      $("artist_id").value = image.artist_id;
+
+      load_likes(image.id);
+      load_comments(image.id);
+      load_related_imgs(image.id);
+    },
+    onFailure: ajaxFailed,
+    onException: ajaxFailed,
+  });
+}
 
 // template to be used each time
 function ajaxFailed(ajax, exception) {

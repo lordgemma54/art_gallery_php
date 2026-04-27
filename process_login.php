@@ -17,16 +17,16 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $stmt = $db->prepare("SELECT id, username FROM artist WHERE artist.username = ?");
 $stmt->execute(["$un"]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$artist = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($user) {
+if ($artist) {
     // use password_verify() here
     $stmt = $db->prepare("SELECT password FROM artist WHERE artist.username = ?");
-    $stmt->execute([$user['username']]);
-    $user_pw = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute([$artist['username']]);
+    $artist_pw = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (password_verify($pw, $user_pw["password"])) {
-        $_SESSION["user_id"] = $user['id'];
+    if (password_verify($pw, $artist_pw["password"])) {
+        $_SESSION["artist_id"] = $artist['id'];
         $_SESSION["logged_in"] = true;
         if (!empty($redirect_id)) {
             header("Location: artwork.php?id=" . $redirect_id);
