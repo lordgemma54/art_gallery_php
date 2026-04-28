@@ -16,6 +16,7 @@ window.onload = function () {
   //   add_like();
   // }
   add_like();
+  add_comment();
   load_likes(artwork_id);
   load_comments(artwork_id);
   load_related_imgs(artist_id, artwork_id);
@@ -23,26 +24,13 @@ window.onload = function () {
 };
 
 // ----------------------------------------------------------- LIKES
-function load_likes(artwork_id) {
-  new Ajax.Request("artwork_service.php", {
-    method: "GET",
-    parameters: { action: "get_likes", id: artwork_id },
-    onSuccess: show_likes,
-    onFailure: ajaxFailed,
-    onException: ajaxFailed,
-  });
-}
-
-function show_likes(ajax) {
-  let data = JSON.parse(ajax.responseText);
-  $("like-count").innerHTML = data.total;
-}
-
 function add_like() {
   let like_btn = $("like-btn");
   like_btn.onclick = function () {
     let loginInput = $("login_status").value;
     let artwork_id = $("artwork_id").value;
+    let artist_id = $("artist_id").value;
+
     if (loginInput !== "1") {
       window.location.href = "login.php?redirect_to=" + artwork_id;
       return;
@@ -63,7 +51,51 @@ function add_like() {
   };
 }
 
+function load_likes(artwork_id) {
+  new Ajax.Request("artwork_service.php", {
+    method: "GET",
+    parameters: { action: "get_likes", id: artwork_id },
+    onSuccess: show_likes,
+    onFailure: ajaxFailed,
+    onException: ajaxFailed,
+  });
+}
+
+function show_likes(ajax) {
+  let data = JSON.parse(ajax.responseText);
+  $("like-count").innerHTML = data.total;
+}
+
 // ----------------------------------------------------------- COMMENTS
+function add_comment() {
+  let comment_btn = $("comment-btn");
+  comment_btn.onclick = function () {
+    let loginInput = $("login_status").value;
+    let artwork_id = $("artwork_id").value;
+    let artist_id = $("artist_id").value;
+    let comment = $("comment_input").value;
+
+    if (loginInput !== "1") {
+      window.location.href = "login.php?redirect_to=" + artwork_id;
+      return;
+    }
+    new Ajax.Request("artwork_service.php", {
+      method: "POST",
+      parameters: {
+        action: "add_comment",
+        artwork_id: artwork_id,
+        artist_id: artist_id,
+        comment: comment,
+      },
+      onSuccess: function () {
+        load_comments(artwork_id);
+      },
+      onFailure: ajaxFailed,
+      onException: ajaxFailed,
+    });
+  };
+}
+
 function load_comments(artwork_id) {
   new Ajax.Request("artwork_service.php", {
     method: "GET",
@@ -76,7 +108,7 @@ function load_comments(artwork_id) {
 
 function show_comments(ajax) {
   let comments = JSON.parse(ajax.responseText);
-
+  let commenter = $("current_artist_username").value;
   let comments_box = $("comments-list");
   comments_box.innerHTML = "";
 
@@ -84,34 +116,9 @@ function show_comments(ajax) {
     let div = document.createElement("div");
     div.className = "comment";
     div.innerHTML =
-      "<strong>" + comments[i].username + "</strong>" + comments[i].comment;
+      "<strong>" + commenter + "</strong><br>" + " " + comments[i].comment;
     comments_box.appendChild(div);
   }
-}
-
-function add_comment() {
-  let comment_btn = $("comment-btn");
-  comment_btn.onclick = function () {
-    let loginInput = $("login_status").value;
-    let artwork_id = $("artwork_id").value;
-    if (loginInput !== "1") {
-      window.location.href = "login.php?redirect_to=" + artwork_id;
-      return;
-    }
-    new Ajax.Request("artwork_service.php", {
-      method: "POST",
-      parameters: {
-        action: "add_comment",
-        artowrk_id: artwork_id,
-        artist_id: artist_id,
-      },
-      onSuccess: function () {
-        load_comments(artwork_id);
-      },
-      onFailure: ajaxFailed,
-      onException: ajaxFailed,
-    });
-  };
 }
 
 // ----------------------------------------------------------- RELATED IMGS
@@ -156,7 +163,7 @@ function show_image(id) {
       $("title").innerHTML = image.title;
 
       $("artist-link").innerHTML = image.username;
-      $("artist-link").href = "artist.php?id=" + image.artist_id;
+      $("artist-link").href = "profile.php?id=" + image.artist_id;
 
       $("artist-avatar").src = image.avatar_img_path;
 

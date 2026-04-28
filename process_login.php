@@ -28,11 +28,16 @@ if ($artist) {
     if (password_verify($pw, $artist_pw["password"])) {
         $_SESSION["artist_id"] = $artist['id'];
         $_SESSION["logged_in"] = true;
+        $_SESSION["username"] = $artist["username"];
         if (!empty($redirect_id)) {
             header("Location: artwork.php?id=" . $redirect_id);
         } else {
             header("Location: index.php");
         }
         exit();
+    } else {
+        header("Location: index.php");
     }
+} else {
+    header("Location: index.php");
 }

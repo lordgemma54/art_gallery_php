@@ -32,8 +32,9 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <input type="hidden" id="artwork_id" value="<?= $artwork_id ?>">
 <input type="hidden" id="artist_id" value="<?= $artwork["artist_id"] ?>">
+<input type="hidden" id="current_artist_username" value="<?= $username ?>">
 <!-- ------------------------------------------------------------- -->
-<input type="hidden" id="login_status" value="<?= isset($_SESSION['logged-in']) && $_SESSION['logged-in'] === true ? '1' : '0' ?>">
+<input type="hidden" id="login_status" value="<?= isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true ? '1' : '0' ?>">
 <!-- ------------------------------------------------------------- -->
 
 
@@ -45,14 +46,15 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
 
 <div class="likes-container">
     <h2>likes</h2>
+    <button type="button" id="like-btn">🔥 Like </button>
     <span id="like-count"></span>
-    <button id="like-btn">🔥 Like </button>
 </div>
 
 <div class="comments-container">
     <h2>comments</h2>
     <form action="">
-        <input type="text" name="comment" id=""> Add a comment
+        <input type="text" name="comment" id="comment_input"> Add a comment
+        <button type="button" id="comment-btn">Submit</button>
     </form>
     <div id="comments-list"></div>
 </div>
@@ -64,7 +66,8 @@ $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
         <?= htmlspecialchars($artwork['username']) ?>
         <img id="artist-avatar" src="<?= $artwork['avatar_img_path'] ?>" alt="artist profile">
     </a>
-    <div id="related-works"></div>
+    <div id="related-works"></div><br>
+    <p id="related_text">Other works by this artist</p>
 </div>
 
 

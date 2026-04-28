@@ -1,3 +1,7 @@
+<?php
+$redirect_id = $_GET["redirect_to"] ?? "";
+// $artist_id = $_POST["artist_id"];
+?>
 <div class="login-container">
     <div>
         <form class="login-form" action="process_login.php" method="post">
@@ -6,9 +10,7 @@
 
             <label><strong>Password</strong><input type="password" name="password" size="16"></label><br>
 
-            <input type="hidden" name="redirect_id" value="<?= htmlspecialchars($redirect_id)  ?>">
-
-            <!-- <div class="form-actions"><input class="button button-primary action-btn" type="submit" value="login"></div><br> -->
+            <input type="hidden" name="redirect_to" value="<?= htmlspecialchars($redirect_id) ?>">
 
             <button type="submit"> Login </button>
 

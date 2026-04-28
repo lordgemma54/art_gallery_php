@@ -9,6 +9,10 @@ if (!isset($_SESSION["logged_in"])) {
     exit();
 }
 
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'guest';
+
+print $username;
+
 print_r($_SESSION);
 include("top.html");
 

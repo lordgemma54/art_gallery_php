@@ -1,5 +1,8 @@
 <?php
 session_start();
+// if (!isset($_SESSION["artist_id"])) {
+//     exit("Not signed in");
+// }
 
 $action = isset($_GET['action']) ? ($_GET['action']) : $_POST['action'];
 
@@ -104,28 +107,11 @@ function get_likes($db)
 
 function add_like($db)
 {
-    $artwork_id = $_POST["artwork_id"];
-    $artist_id = $_POST["artist_id"];
+    $artwork_id = $_POST["artwork_id"] ?? null;
+    $artist_id = $_POST["artist_id"] ?? null;
 
-    $artwork_id = isset($_POST["artwork_id"]) ? $_POST["artwork_id"] : null;
     $stmt = $db->prepare("INSERT INTO likes (artwork_id, artist_id) VALUES (?, ?)");
     $stmt->execute([$artwork_id, $artist_id]);
-}
-
-function get_comments($db)
-{
-    $artwork_id = $_GET["artwork_id"];
-
-    $stmt = $db->prepare("SELECT c.comment, a.username 
-                        FROM comment c
-                        JOIN artist a ON c.artist_id = a.id
-                        WHERE artwork_id = ? 
-                        ORDER BY created_at DESC");
-    $stmt->execute([$artwork_id]);
-    $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    header("Content-type: application/json");
-    echo json_encode($comments);
 }
 
 function add_comment($db)
@@ -134,9 +120,27 @@ function add_comment($db)
     $artwork_id = $_POST["artwork_id"];
     $comment = $_POST["comment"];
 
-    $stmt = $db->prepare("INSERT INTO comment (artist_id, artwork_id, comment) (VALUES (?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO comment (artist_id, artwork_id, comment) VALUES (?, ?, ?)");
     $stmt->execute([$artist_id, $artwork_id, $comment]);
 }
+
+
+function get_comments($db)
+{
+    $artwork_id = $_GET["artwork_id"];
+
+    $stmt = $db->prepare("SELECT c.comment, a.username 
+                        FROM comment c
+                        JOIN artist a ON c.artist_id = a.id
+                        WHERE c.artwork_id = ? 
+                        ORDER BY c.created_at DESC");
+    $stmt->execute([$artwork_id]);
+    $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    header("Content-type: application/json");
+    echo json_encode($comments);
+}
+
 
 
 function get_related_imgs($db)
@@ -166,7 +170,7 @@ function get_image($db)
                         JOIN artist ar ON aw.artist_id = ar.id
                         WHERE aw.id = ?");
     $stmt->execute([$artwork_id]);
-    $artwork = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $artwork = $stmt->fetch(PDO::FETCH_ASSOC);
     header("Content-type: application/json");
     echo json_encode($artwork);
 }
