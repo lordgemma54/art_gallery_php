@@ -482,3 +482,8 @@ form {
 .create-profile-text {
   text-align: center;
 }
+
+#footer {
+  text-align: center;
+  color: #2f2f2f;
+}

@@ -1,13 +1,10 @@
+/*
+Name: Rahul Venkatesh
+Final Project 
+Course: CPSC 5210 - Web dev 2
+Description: This art gallery app allows a user do create their own gallery to show off their artwork.  The 'artist' (user) can upload files of their artwork and like and comment on the art of other artists.  Likes, comments, and clicking on 'related images', a mini gallery of other works by this same artist, refresh the artwork on the page without reload. */
 window.onload = function () {
   // JS files run on every page they are included on - so this page, runs on every page in which top.html is included in
-
-  // new Ajax.Request("artwork_service.php", {
-  //   method: "get",
-  //   parameters: { action: "get_gallery" },
-  //   onSuccess: showPublicGallery,
-  //   onFailure: ajaxFailed,
-  //   onException: ajaxFailed,
-  // });
   let gallery = $("public-gallery");
 
   if (gallery) {

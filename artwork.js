@@ -1,7 +1,8 @@
-/*Name: Rahul Venkatesh
-Final Project
-Course: CPSC 5200 - Web Development 1
-Description: This book journaling app allows you to record notes, quotes, and other identifying information for each book you read.  The goals are to keep a log of your reading journey as well as to encourage the development of a reading habit.*/
+/*
+Name: Rahul Venkatesh
+Final Project 
+Course: CPSC 5210 - Web dev 2
+Description: This art gallery app allows a user do create their own gallery to show off their artwork.  The 'artist' (user) can upload files of their artwork and like and comment on the art of other artists.  Likes, comments, and clicking on 'related images', a mini gallery of other works by this same artist, refresh the artwork on the page without reload. */
 window.onload = function () {
   // document.observe("dom:loaded", function () {
   //   let artwork_id = $("artwork_id").readAttribute("data-id");
