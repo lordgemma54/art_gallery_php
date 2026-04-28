@@ -1,51 +1,177 @@
+/* =========================================================
+   GLOBAL RESET / BASE
+========================================================= */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background: #1b1b1b;
   color: #f2f2f2;
+  line-height: 1.4;
 }
 
-/* NAVBAR */
-.navbar {
-  background: #222;
-  padding: 14px 24px;
-  display: flex;
-  gap: 20px;
-  border-bottom: 2px solid #ff8c32;
-}
-
-navbar a {
-  color: white;
+a {
+  color: #ff8c32;
   text-decoration: none;
-  font-weight: bold;
 }
 
-.navbar a:hover {
+a:visited {
   color: #ff8c32;
 }
 
-/* PAGE TITLE */
-.page-heading {
-  text-align: center;
-  margin: 30px 0;
+a:hover {
+  color: #59a8ff;
 }
 
-/* GALLERIES */
+/* =========================================================
+   NAVBAR
+========================================================= */
+.navbar {
+  background: #222;
+  border-bottom: 2px solid #ff8c32;
+  padding: 16px 24px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 34px;
+}
+
+.navbar a {
+  color: #ff8c32;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.navbar a:visited {
+  color: #ff8c32;
+}
+
+.navbar a:hover {
+  color: #59a8ff;
+}
+
+/* =========================================================
+   HEADINGS
+========================================================= */
+h1,
+h2,
+h3,
+.page-heading {
+  text-align: center;
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+
+/* =========================================================
+   COMMON CARD
+========================================================= */
+.likes-container,
+.comments-container,
+.artist-container,
+.login-container,
+.signup-container,
+.artist-details,
+.profile-card,
+.sidebar-card {
+  background: #242424;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+button,
+input[type="submit"] {
+  background: #ff8c32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  background: #ff9f50;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #2c2c2c;
+  color: white;
+}
+
+textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* =========================================================
+   LOGIN / SIGNUP PAGES
+========================================================= */
+.login-container,
+.signup-container {
+  max-width: 420px;
+  margin: 60px auto;
+}
+
+.login-form,
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.links {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.links a,
+.links a:visited {
+  color: #ff8c32;
+}
+
+.links a:hover {
+  color: #59a8ff;
+}
+
+/* =========================================================
+   GALLERIES
+========================================================= */
 #public-gallery,
 .artist-gallery,
 #related-works {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 18px;
-  padding: 24px;
+  padding: 20px;
 }
 
-/* THUMBNAILS */
 .gallery-tile {
   width: 100%;
   height: 220px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
   display: block;
   transition: transform 0.2s ease;
 }
@@ -54,51 +180,210 @@ navbar a {
   transform: scale(1.03);
 }
 
-* FULL ARTWORK PAGE IMAGE */ #artwork-img {
-  max-width: 100%;
-  max-height: 75vh;
-  object-fit: contain;
-  display: block;
-  margin: auto;
-  border-radius: 8px;
-}
-
-/* BUTTONS */
-button {
-  background: #ff8c32;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background: #ff9f50;
-}
-
-/* PROFILE */
+/* =========================================================
+   PROFILE PAGE
+========================================================= */
 .profile-page {
   max-width: 1200px;
   margin: auto;
   padding: 24px;
 }
 
-.profile-page img:first-of-type {
+.profile-page > img,
+.profile-avatar,
+#artist-avatar {
   width: 140px;
   height: 140px;
   object-fit: cover;
   border-radius: 50%;
+  display: block;
+  margin: 0 auto 18px auto;
 }
 
-/* ARTWORK PAGE LAYOUT */
-#artwork-container,
-.likes-container,
-.comments-container,
-.artist-container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px;
+#likes-counter,
+#comments-counter {
+  text-align: center;
+  margin: 10px 0;
+}
+
+#edit-profile-btn {
+  display: block;
+  margin: 18px auto 26px auto;
+}
+
+/* =========================================================
+   ARTWORK PAGE LAYOUT
+========================================================= */
+.artwork-layout {
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 0 24px;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 26px;
+}
+
+/* LEFT SIDE */
+#artwork-container {
   background: #242424;
+  border-radius: 10px;
+  padding: 22px;
+}
+
+#artwork-img {
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  display: block;
   border-radius: 8px;
+}
+
+#title {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 14px;
+}
+
+/* RIGHT SIDE */
+.artwork-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* =========================================================
+   ARTIST CARD ON ARTWORK PAGE
+========================================================= */
+.artist-container {
+  text-align: center;
+}
+
+#artist-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ff8c32;
+}
+
+#artist-link:visited {
+  color: #ff8c32;
+}
+
+#artist-link:hover {
+  color: #59a8ff;
+}
+
+#artist-avatar {
+  width: 110px;
+  height: 110px;
+  margin: 0;
+}
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+.comments-container form {
+  margin-bottom: 16px;
+}
+
+.comments-container input[type="text"] {
+  min-height: 46px;
+  font-size: 1rem;
+}
+
+#comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment {
+  background: #2f2f2f;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* =========================================================
+   EDIT PROFILE PAGE
+========================================================= */
+.edit-profile-layout {
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 0 24px;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 26px;
+}
+
+.edit-gallery-panel {
+  background: #242424;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.edit-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.artist-details {
+  padding: 22px;
+}
+
+.artist-details img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 18px auto;
+}
+
+.tile {
+  position: relative;
+}
+
+.tile button {
+  margin-top: 8px;
+  width: 100%;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 950px) {
+  .artwork-layout,
+  .edit-profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .artwork-sidebar,
+  .edit-sidebar {
+    order: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  #public-gallery,
+  .artist-gallery,
+  #related-works {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-tile {
+    height: 260px;
+  }
 }
