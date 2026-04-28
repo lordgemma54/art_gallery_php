@@ -1,8 +1,9 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 session_start();
 include("top.html");
+include("navigation-bar.php");
 
 $artist_id = $_GET["id"];
 
@@ -51,7 +52,7 @@ $total_comments = $stmt->fetch(PDO::FETCH_ASSOC);
     <p id="likes-counter">Total likes <span id="total-likes"><?= $total_likes["total_likes"] ?></span></p>
     <p id="comments-counter">Total comments <span id="total-comments"> <?= $total_comments["total_comments"] ?></span></p>
 
-    <?php if (isset($_SESSION["artist_id"]) && $SESSION["artist_id"] == $artist_id) { ?>
+    <?php if (isset($_SESSION["artist_id"]) && $_SESSION["artist_id"] == $artist_id) { ?>
         <a href="edit-profile.php">
             <button id="edit-profile-btn" type="button"> Edit profile</button>
         </a>

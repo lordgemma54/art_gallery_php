@@ -1,11 +1,12 @@
 <?php
 session_start();
 include("top.html");
+include("navigation-bar.php");
 
 $artwork_id = isset($_GET["id"]) ? $_GET["id"] : null;
 //    $_SESSION isset($_SESSION["logged-in"] && $_SESSION["logged-in"] === true)
 
-print_r($_SESSION);
+// print_r($_SESSION);
 
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'guest';
 

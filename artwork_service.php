@@ -42,8 +42,13 @@ switch ($action) {
     case 'get_image':
         get_image($db);
         break;
+
     case 'get_artist_gallery':
         get_artist_gallery($db);
+        break;
+
+    case 'delete_artwork':
+        delete_artwork($db);
         break;
 }
 
@@ -175,6 +180,21 @@ function get_artist_gallery($db)
 
     header("Content-type: application/json");
     echo json_encode($artist_gallery);
+}
+
+function delete_artwork($db)
+{
+    $artwork_id = $_POST["artwork_id"];
+    $artist_id = $_SESSION["artist_id"];
+
+    $stmt = $db->prepare("DELETE  
+                        FROM artwork
+                        WHERE id = ?
+                        AND artist_id = ?");
+    $stmt->execute([$artwork_id, $artist_id]);
+
+    header("Content-type: application/json");
+    echo json_encode(["success" => true]);
 }
 
 // function get_likes_JSON($result)

@@ -9,13 +9,17 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 $artist_id = $_SESSION["artist_id"] ?? null;
 
-if (empty($artist_id)) {
-      header("Location: index.php");
-      exit();
-}
 ?>
 <nav class="navbar">
       <a href="index.php">Home</a>
-      <a href="<?= isset($_SESSION['artist_id']) ? 'profile.php?id=' . $_SESSION['artist_id'] : 'index.php' ?>">Profile</a>
-      <a href="logout.php">Logout</a>
+
+      <?php if ($artist_id) { ?>
+            <a href="profile.php?id=<?= $artist_id ?>">Profile</a>
+            <a href="logout.php">Logout</a>
+
+      <?php } else { ?>
+            <a href="login.php">Login</a>
+            <a href="signup.php">Sign Up</a>
+      <?php } ?>
+
 </nav>

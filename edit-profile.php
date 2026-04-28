@@ -9,7 +9,6 @@ if (!isset($_SESSION["logged_in"])) {
 include("top.html");
 include("navigation-bar.php");
 
-// print_r($_SESSION);
 
 $artist_id = $_SESSION["artist_id"];
 
@@ -24,23 +23,25 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $stmt = $db->prepare("SELECT username, bio, avatar_img_path 
                     FROM artist
-                    WHERE artist.id = ?");
+                    WHERE id = ?");
 $stmt->execute([$artist_id]);
 $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $stmt = $db->prepare("SELECT id, img_path 
                     FROM artwork
-                    WHERE artist.id = ?");
+                    WHERE artist_id = ?");
 $stmt->execute([$artist_id]);
-$gallery->fetch(PDO::FETCH_ASSOC);
+$gallery = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h2>Edit profile</h2>
 <form action="process-profile.php" method="post" enctype="multipart/form-data">
 
-    <input type="hidden" name="artist_id" value="<?= $artist_id ?>">;
+    <input type="hidden" name="artist_id" value="<?= $artist_id ?>">
+    <input type="hidden" name="login_status" value="<?= isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true ? '1' : '0' ?>">
+
     <label>Bio</label>
-    <textarea name="bio" rows="5" cols="40"><?php echo htmlspecialchars($profile['comment']); ?> </textarea> <br>
+    <textarea name="bio" rows="5" cols="40"><?php echo htmlspecialchars($profile['bio']); ?> </textarea> <br>
 
     <?php if (!empty($profile["avatar_img_path"])) { ?>
         <img src="<?= $profile["avatar_img_path"] ?>" alt="avatar image" width="120">
@@ -53,16 +54,18 @@ $gallery->fetch(PDO::FETCH_ASSOC);
     <input type="file" name="artworks[]" multiple>
 
     <div class="artist-gallery">
-        <?php foreach ($gallery as $img) { ?>
-            <img class="gallery-tile" src="<?= $img["img_path"] ?>" alt="image: <?= $img["id"] ?>">
-            <a href="artwork_service.php">Delete
-            </a>
 
+        <?php foreach ($gallery as $img) { ?>
+
+            <div class="tile" id="tile-<?= $img["id"] ?>">
+                <img class="gallery-tile" src="<?= $img["img_path"] ?>" alt="image: <?= $img["id"] ?>">
+                <button type="button" class="delete-btn" data-id="<?= $img["id"] ?>">Delete</button>
+            </div>
         <?php } ?>
     </div>
 
     <button type="submit">Save changes</button>
 
 </form>
-
+<script src="edit-profile.js" type="text/javascript"></script>
 <?php include("bottom.html") ?>
