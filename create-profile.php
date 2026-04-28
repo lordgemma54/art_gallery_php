@@ -11,9 +11,6 @@ if (!isset($_SESSION["logged_in"])) {
 
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'guest';
 
-print $username;
-
-print_r($_SESSION);
 include("top.html");
 
 $artist_id = $_SESSION["artist_id"];
@@ -25,10 +22,10 @@ $artist_id = $_SESSION["artist_id"];
     <div class="artist-details">
         <textarea name="bio" placeholder="enter optional details about yourself"></textarea>
 
-        <label>Upload a profile image:</label>
+        <p class="create-profile-text"><label>Upload a profile image:</label></p>
         <input type="file" name="avatar">
 
-        <label>Upload artwork</label>
+        <p class="create-profile-text"><label>Upload artwork</label></p>
         <input type="file" name="artworks[]" multiple>
 
         <button type="submit">Create Profile</button>

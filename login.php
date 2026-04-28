@@ -1,4 +1,5 @@
 <?php
+include("top.html");
 $redirect_id = $_GET["redirect_to"] ?? "";
 // $artist_id = $_POST["artist_id"];
 ?>

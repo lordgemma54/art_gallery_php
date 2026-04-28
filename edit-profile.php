@@ -40,15 +40,16 @@ $gallery = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <input type="hidden" name="artist_id" value="<?= $artist_id ?>">
     <input type="hidden" name="login_status" value="<?= isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true ? '1' : '0' ?>">
 
-    <label>Bio</label>
+    <p id="bio-label"><label>Bio</label></p>
     <textarea name="bio" rows="5" cols="40"><?php echo htmlspecialchars($profile['bio']); ?> </textarea> <br>
+    <div id="profile-inputs">
+        <?php if (!empty($profile["avatar_img_path"])) { ?>
+            <img src="<?= $profile["avatar_img_path"] ?>" alt="avatar image" width="120">
+        <?php } ?> <br>
 
-    <?php if (!empty($profile["avatar_img_path"])) { ?>
-        <img src="<?= $profile["avatar_img_path"] ?>" alt="avatar image" width="120">
-    <?php } ?>
-
-    <label>Replace Avatar</label>
-    <input type="file" name="avatar">
+        <label>Replace Avatar</label>
+        <input type="file" name="avatar">
+    </div>
 
     <label>Add More Artwork</label>
     <input type="file" name="artworks[]" multiple>
@@ -64,7 +65,7 @@ $gallery = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php } ?>
     </div>
 
-    <button type="submit">Save changes</button>
+    <div id="save-changes-btn"><button type="submit">Save changes</button></div>
 
 </form>
 <script src="edit-profile.js" type="text/javascript"></script>
